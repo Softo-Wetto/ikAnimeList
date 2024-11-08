@@ -29,7 +29,9 @@ const login = async (req, res) => {
         if (!user || !(await bcryptjs_1.default.compare(password, user.password))) {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
-        const token = jsonwebtoken_1.default.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        // Include username in the token payload
+        const token = jsonwebtoken_1.default.sign({ id: user.id, username: user.username, email: user.email }, // Add username to token payload
+        process.env.JWT_SECRET, { expiresIn: '1h' });
         res.json({ message: 'Logged in', token });
     }
     catch (error) {
