@@ -40,7 +40,7 @@ const Header: React.FC = () => {
     <header className="bg-primary text-white shadow-md">
       <div className="container mx-auto flex justify-between items-center py-4 px-6">
         <Link to="/" className="text-2xl font-bold hover:text-accent">
-          My Anime List
+          IkAnimeList
         </Link>
 
         <nav className="space-x-4 mx-auto flex">

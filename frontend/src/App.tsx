@@ -6,8 +6,10 @@ import HomePage from './pages/HomePage';
 import AnimeListPage from './pages/AnimeListPage';
 import AnimeDetailsPage from './pages/AnimeDetailsPage';
 import MangaListPage from './pages/MangaListPage';
+import MangaDetailsPage from './pages/MangaDetailsPage';
 import RegisterPage from './pages/RegisterPage';
-import LoginPage from './pages/LoginPage';        
+import LoginPage from './pages/LoginPage';
+import ContactPage from './pages/ContactPage';        
 
 
 const App: React.FC = () => (
@@ -16,8 +18,10 @@ const App: React.FC = () => (
     <Route path="/anime" element={<AnimeListPage />} />
     <Route path="/anime/:id" element={<AnimeDetailsPage />} /> 
     <Route path="/manga" element={<MangaListPage />} />
+    <Route path="/manga/:id" element={<MangaDetailsPage />} />
     <Route path="/register" element={<RegisterPage />} />
     <Route path="/login" element={<LoginPage />} />
+    <Route path="/contact" element={<ContactPage />} />
   </Routes>
 );
 
