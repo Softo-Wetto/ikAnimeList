@@ -1,43 +1,59 @@
 // src/pages/MangaListPage.tsx
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
 import MangaList from '../components/MangaList';
-import { useFetchManga } from '../hooks/useFetchManga';
+import SearchBar from '../components/SearchBar';
+import MangaFilterDropdown from '../components/MangaFilterDropdown';
+import { useFetchSearchManga } from '../hooks/useFetchSearchManga';
 
 const MangaListPage: React.FC = () => {
-  const [type, setType] = useState<string>('manga');
-  const [filter, setFilter] = useState<string>('bypopularity');
-  const limit = 10;
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [filters, setFilters] = useState<Record<string, any>>({});
+  const { mangaList, loading, error, loadMore, resetSearch, hasMore } = useFetchSearchManga(searchTerm, filters);
 
-  const { mangaList, loading, error } = useFetchManga(type, filter, 1, limit);
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value);
+    resetSearch();
+  };
+
+  const handleFiltersChange = (newFilters: Record<string, any>) => {
+    setFilters(newFilters);
+    resetSearch();
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 500 && hasMore) {
+        loadMore();
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [loadMore, hasMore]);
 
   return (
     <Layout>
-      <div className="filter-container flex justify-center items-center mt-6 mb-4">
-        <label className="mr-3 text-lg font-semibold text-primary">Type:</label>
-        <select value={type} onChange={(e) => setType(e.target.value)} className="p-2 bg-white border border-gray-300 rounded-md text-gray-700 shadow-sm">
-          <option value="manga">Manga</option>
-          <option value="novel">Novel</option>
-          <option value="lightnovel">Light Novel</option>
-          <option value="oneshot">One-Shot</option>
-          <option value="doujin">Doujin</option>
-          <option value="manhwa">Manhwa</option>
-          <option value="manhua">Manhua</option>
-        </select>
+      <div className="container mx-auto px-4 py-4">
+        {/* Flex container for search and filters */}
+        <div className="flex flex-wrap items-center justify-between gap-4 p-4 mb-6 bg-gray-100 rounded-lg shadow-md">
+          {/* Search bar */}
+          <div className="flex-shrink-0 w-1/4">
+            <SearchBar search={searchTerm} onSearchChange={handleSearchChange} />
+          </div>
 
-        <label className="ml-6 mr-3 text-lg font-semibold text-primary">Filter:</label>
-        <select value={filter} onChange={(e) => setFilter(e.target.value)} className="p-2 bg-white border border-gray-300 rounded-md text-gray-700 shadow-sm">
-          <option value="publishing">Publishing</option>
-          <option value="upcoming">Upcoming</option>
-          <option value="bypopularity">By Popularity</option>
-          <option value="favorite">Favorite</option>
-        </select>
+          {/* Filters container */}
+          <div className="flex-1">
+            <MangaFilterDropdown filters={filters} onFiltersChange={handleFiltersChange} />
+          </div>
+        </div>
+
+        {error && <p className="text-center text-red-500">{error}</p>}
+        <MangaList mangaList={mangaList} />
+
+        {loading && <p className="text-center text-primary">Loading more...</p>}
       </div>
-
-      {loading && <p className="text-center text-primary">Loading...</p>}
-      {error && <p className="text-center text-red-500">{error}</p>}
-      {!loading && !error && <MangaList mangaList={mangaList} />}
     </Layout>
   );
 };

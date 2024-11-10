@@ -16,7 +16,6 @@ export interface Manga {
   type: string;
 }
 
-// Helper function to handle retries with exponential backoff
 const fetchWithRetry = async (url: string, params: object, retries = 3, delay = 1000): Promise<Manga[]> => {
   try {
     const response = await axios.get(url, { params });
@@ -30,11 +29,19 @@ const fetchWithRetry = async (url: string, params: object, retries = 3, delay = 
   }
 };
 
-export const fetchTopManga = async (
-  type: string = 'manga',
-  filter: string = 'bypopularity',
-  page: number = 1,
-  limit: number = 10
-) => {
-  return fetchWithRetry('https://api.jikan.moe/v4/top/manga', { type, filter, page, limit });
+// Fetch top manga with filters
+export const fetchTopManga = async (filter: string = 'bypopularity') => {
+  return fetchWithRetry('https://api.jikan.moe/v4/top/manga', { filter });
+};
+
+// Search manga by title with filters and pagination
+export const searchManga = async (query: string, filters: Record<string, any> = {}, page: number = 1): Promise<Manga[]> => {
+  const params = { q: query, page, ...filters };
+  return fetchWithRetry('https://api.jikan.moe/v4/manga', params);
+};
+
+// Fetch manga list with filters and pagination, for default listing when no search query
+export const fetchMangaList = async (filters: Record<string, any> = {}, page: number = 1): Promise<Manga[]> => {
+  const params = { page, ...filters };
+  return fetchWithRetry('https://api.jikan.moe/v4/manga', params);
 };

@@ -14,7 +14,6 @@ export interface Anime {
   episodes: number;
 }
 
-// Function to add retry logic
 const fetchWithRetry = async (url: string, params: object, retries = 3, delay = 1000): Promise<Anime[]> => {
   try {
     const response = await axios.get(url, { params });
@@ -28,6 +27,20 @@ const fetchWithRetry = async (url: string, params: object, retries = 3, delay = 
   }
 };
 
+// Fetch top anime with filters
 export const fetchTopAnime = async (filter: string = 'bypopularity') => {
   return fetchWithRetry('https://api.jikan.moe/v4/top/anime', { filter });
 };
+
+// Search anime by title with filters and pagination
+export const searchAnime = async (query: string, filters: Record<string, any> = {}, page: number = 1): Promise<Anime[]> => {
+  const params = { q: query, page, ...filters };
+  return fetchWithRetry('https://api.jikan.moe/v4/anime', params);
+};
+
+// Fetch anime list with filters and pagination, for default listing when no search query
+export const fetchAnimeList = async (filters: Record<string, any> = {}, page: number = 1): Promise<Anime[]> => {
+  const params = { page, ...filters };
+  return fetchWithRetry('https://api.jikan.moe/v4/anime', params);
+};
+

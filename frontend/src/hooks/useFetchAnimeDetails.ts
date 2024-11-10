@@ -40,20 +40,11 @@ export const useFetchAnimeDetails = (id: string) => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const cacheKey = `anime_details_${id}`;
-    const cachedData = localStorage.getItem(cacheKey);
-
     const fetchData = async () => {
       try {
         setLoading(true);
-
-        if (cachedData) {
-          setAnimeDetails(JSON.parse(cachedData));
-        } else {
-          const data = await fetchWithRetry(`https://api.jikan.moe/v4/anime/${id}`);
-          setAnimeDetails(data);
-          localStorage.setItem(cacheKey, JSON.stringify(data));
-        }
+        const data = await fetchWithRetry(`https://api.jikan.moe/v4/anime/${id}`);
+        setAnimeDetails(data);
       } catch (err) {
         setError('Failed to fetch anime details');
       } finally {

@@ -40,20 +40,12 @@ export const useFetchMangaDetails = (id: string) => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const cacheKey = `manga_details_${id}`;
-    const cachedData = localStorage.getItem(cacheKey);
-
     const fetchData = async () => {
       try {
         setLoading(true);
 
-        if (cachedData) {
-          setMangaDetails(JSON.parse(cachedData));
-        } else {
-          const data = await fetchWithRetry(`https://api.jikan.moe/v4/manga/${id}`);
-          setMangaDetails(data);
-          localStorage.setItem(cacheKey, JSON.stringify(data));
-        }
+        const data = await fetchWithRetry(`https://api.jikan.moe/v4/manga/${id}`);
+        setMangaDetails(data);
       } catch (err) {
         setError('Failed to fetch manga details');
       } finally {

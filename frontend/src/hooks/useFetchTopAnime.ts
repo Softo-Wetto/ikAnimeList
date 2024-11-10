@@ -1,9 +1,9 @@
-// src/hooks/useFetchAnime.ts
+// src/hooks/useFetchTopAnime.ts
 
 import { useEffect, useState } from 'react';
 import { fetchTopAnime, Anime } from '../services/animeService';
 
-export const useFetchAnime = (filter: string, staggerDelay = 0) => {
+export const useFetchTopAnime = (filter: string, staggerDelay = 0) => {
   const [animeList, setAnimeList] = useState<Anime[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);

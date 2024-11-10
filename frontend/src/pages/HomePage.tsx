@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
 import HeroSection from '../components/HeroSection';
 import AnimeCard from '../components/AnimeCard';
-import { useFetchAnime } from '../hooks/useFetchAnime';
+import { useFetchTopAnime } from '../hooks/useFetchTopAnime';
 import { Anime } from '../services/animeService';
 
 const HomePage: React.FC = () => {
@@ -14,10 +14,10 @@ const HomePage: React.FC = () => {
   const [favoriteAnime, setFavoriteAnime] = useState<Anime[]>([]);
 
   // Fetch anime for each category
-  const { animeList: airingList, loading: airingLoading, error: airingError } = useFetchAnime('airing');
-  const { animeList: upcomingList, loading: upcomingLoading, error: upcomingError } = useFetchAnime('upcoming');
-  const { animeList: popularList, loading: popularLoading, error: popularError } = useFetchAnime('bypopularity');
-  const { animeList: favoriteList, loading: favoriteLoading, error: favoriteError } = useFetchAnime('favorite');
+  const { animeList: airingList, loading: airingLoading, error: airingError } = useFetchTopAnime('airing');
+  const { animeList: upcomingList, loading: upcomingLoading, error: upcomingError } = useFetchTopAnime('upcoming');
+  const { animeList: popularList, loading: popularLoading, error: popularError } = useFetchTopAnime('bypopularity');
+  const { animeList: favoriteList, loading: favoriteLoading, error: favoriteError } = useFetchTopAnime('favorite');
 
   // Set anime data once fetched
   useEffect(() => {

@@ -1,38 +1,61 @@
-// src/pages/Home.tsx
-import React, { useState } from 'react';
+// src/pages/AnimeListPage.tsx
+
+import React, { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
 import AnimeList from '../components/AnimeList';
-import { useFetchAnime } from '../hooks/useFetchAnime';
+import SearchBar from '../components/SearchBar';
+import AnimeFilterDropdown from '../components/AnimeFilterDropdown';
+import { useFetchSearchAnime } from '../hooks/useFetchSearchAnime';
 
-const Home: React.FC = () => {
-  const [filter, setFilter] = useState<string>('bypopularity');
-  const { animeList, loading, error } = useFetchAnime(filter);
+const AnimeListPage: React.FC = () => {
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [filters, setFilters] = useState<Record<string, any>>({});
+  const { animeList, loading, error, loadMore, resetSearch, hasMore } = useFetchSearchAnime(searchTerm, filters);
 
-  const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFilter(e.target.value);
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value);
+    resetSearch();
   };
+
+  const handleFiltersChange = (newFilters: Record<string, any>) => {
+    setFilters(newFilters);
+    resetSearch(); 
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 500 && hasMore) {
+        loadMore();
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [loadMore, hasMore]);
 
   return (
     <Layout>
-      <div className="filter-container flex justify-center items-center mt-6 mb-4">
-        <label className="mr-3 text-lg font-semibold text-primary">Filter: </label>
-        <select
-          value={filter}
-          onChange={handleFilterChange}
-          className="p-2 bg-white border border-gray-300 rounded-md text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-primary"
-        >
-          <option value="airing">Airing</option>
-          <option value="upcoming">Upcoming</option>
-          <option value="bypopularity">By Popularity</option>
-          <option value="favorite">Favorite</option>
-        </select>
-      </div>
+      <div className="container mx-auto px-4 py-4">
+        {/* Flex container for search and filters */}
+        <div className="flex flex-wrap items-center justify-between gap-4 p-4 mb-6 bg-gray-100 rounded-lg shadow-md">
+          {/* Search bar */}
+          <div className="w-full md:w-1/4">
+            <SearchBar search={searchTerm} onSearchChange={handleSearchChange} />
+          </div>
 
-      {loading && <p className="text-center text-primary">Loading...</p>}
-      {error && <p className="text-center text-red-500">{error}</p>}
-      {!loading && !error && <AnimeList animeList={animeList} />}
+          {/* Filters container */}
+          <div className="flex-1 flex flex-wrap items-center gap-4">
+            <AnimeFilterDropdown filters={filters} onFiltersChange={handleFiltersChange} />
+          </div>
+        </div>
+
+        {error && <p className="text-center text-red-500">{error}</p>}
+        <AnimeList animeList={animeList} />
+
+        {loading && <p className="text-center text-primary">Loading more...</p>}
+      </div>
     </Layout>
   );
 };
 
-export default Home;
+export default AnimeListPage;
