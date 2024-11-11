@@ -5,22 +5,48 @@ import axios from 'axios';
 
 export interface AnimeDetails {
   mal_id: number;
-  title: string;
-  synopsis: string;
-  score: number;
-  episodes: number;
+  url: string;
   images: {
     jpg: {
       image_url: string;
     };
   };
-  aired: {
-    string: string;
+  trailer: {
+    youtube_id: string | null;
+    url: string | null;
+    embed_url: string | null;
   };
-  genres: { name: string }[];
+  titles: { type: string; title: string }[];
+  title_english: string | null;
+  title_japanese: string | null;
+  title_synonyms: string[];
+  type: string | null;
+  source: string | null;
+  episodes: number | null;
+  status: string | null;
+  airing: boolean;
+  aired: { string: string };
+  duration: string | null;
+  rating: string | null;
+  score: number | null;
+  scored_by: number | null;
+  rank: number | null;
+  popularity: number | null;
+  members: number | null;
+  favorites: number | null;
+  synopsis: string | null;
+  background: string | null;
+  season: string | null;
+  year: number | null;
+  producers: { mal_id: number; name: string; url: string }[];
+  licensors: { mal_id: number; name: string; url: string }[];
+  studios: { mal_id: number; name: string; url: string }[];
+  genres: { mal_id: number; name: string; url: string }[];
+  themes: { mal_id: number; name: string; url: string }[];
+  demographics: { mal_id: number; name: string; url: string }[];
 }
 
-// Helper function for retrying requests
+// Helper function to retry fetching data on 429 error
 const fetchWithRetry = async (url: string, retries = 3, delay = 1000): Promise<AnimeDetails> => {
   try {
     const response = await axios.get(url);
@@ -28,7 +54,7 @@ const fetchWithRetry = async (url: string, retries = 3, delay = 1000): Promise<A
   } catch (error: any) {
     if (retries > 0 && error.response?.status === 429) {
       await new Promise(resolve => setTimeout(resolve, delay));
-      return fetchWithRetry(url, retries - 1, delay * 2); // Exponential backoff
+      return fetchWithRetry(url, retries - 1, delay * 2);
     }
     throw error;
   }
