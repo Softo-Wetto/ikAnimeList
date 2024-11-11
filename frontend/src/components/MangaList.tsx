@@ -9,7 +9,7 @@ interface MangaListProps {
 }
 
 const MangaList: React.FC<MangaListProps> = ({ mangaList }) => (
-  <div className="manga-list grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6">
+  <div className="manga-list grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 p-6">
     {mangaList.map((manga) => (
       <MangaCard key={manga.mal_id} manga={manga} />
     ))}
