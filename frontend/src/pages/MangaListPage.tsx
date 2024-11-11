@@ -5,6 +5,7 @@ import Layout from '../components/Layout';
 import MangaList from '../components/MangaList';
 import SearchBar from '../components/SearchBar';
 import MangaFilterDropdown from '../components/MangaFilterDropdown';
+import BackToTopButton from '../components/BackToTopButton';
 import { useFetchSearchManga } from '../hooks/useFetchSearchManga';
 
 const MangaListPage: React.FC = () => {
@@ -53,6 +54,7 @@ const MangaListPage: React.FC = () => {
         <MangaList mangaList={mangaList} />
 
         {loading && <p className="text-center text-primary">Loading more...</p>}
+        <BackToTopButton />
       </div>
     </Layout>
   );

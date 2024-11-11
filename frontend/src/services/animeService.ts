@@ -28,8 +28,8 @@ const fetchWithRetry = async (url: string, params: object, retries = 3, delay = 
 };
 
 // Fetch top anime with filters
-export const fetchTopAnime = async (filter: string = 'bypopularity') => {
-  return fetchWithRetry('https://api.jikan.moe/v4/top/anime', { filter });
+export const fetchTopAnime = async (filter: string = 'bypopularity', page: number = 1) => {
+  return fetchWithRetry('https://api.jikan.moe/v4/top/anime', { filter, page });
 };
 
 // Search anime by title with filters and pagination

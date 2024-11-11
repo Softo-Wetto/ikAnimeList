@@ -67,6 +67,7 @@ const MangaDetailsPage: React.FC = () => {
             <div className="p-4 bg-gray-50 rounded-lg shadow-md">
               {activeTab === 'overview' && (
                 <div className="space-y-4">
+                  <h2 className="text-xl font-semibold text-gray-900">Synopsis</h2>
                   <p className="text-gray-700">{synopsis || 'Synopsis not available.'}</p>
                   <ul className="space-y-2 text-gray-800">
                     <li><strong>Type:</strong> {type || 'N/A'}</li>

@@ -5,6 +5,7 @@ import Layout from '../components/Layout';
 import AnimeList from '../components/AnimeList';
 import SearchBar from '../components/SearchBar';
 import AnimeFilterDropdown from '../components/AnimeFilterDropdown';
+import BackToTopButton from '../components/BackToTopButton';
 import { useFetchSearchAnime } from '../hooks/useFetchSearchAnime';
 
 const AnimeListPage: React.FC = () => {
@@ -53,6 +54,7 @@ const AnimeListPage: React.FC = () => {
         <AnimeList animeList={animeList} />
 
         {loading && <p className="text-center text-primary">Loading more...</p>}
+        <BackToTopButton />
       </div>
     </Layout>
   );
