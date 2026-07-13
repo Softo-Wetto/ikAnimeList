@@ -1,0 +1,58 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ikanimelist
+      POSTGRES_USER: ikanime
+      POSTGRES_PASSWORD: ikanime
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - ikanimelist_postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ikanime -d ikanimelist"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  migrate:
+    build:
+      context: .
+      target: builder
+    restart: "no"
+    environment:
+      DATABASE_URL: postgresql://ikanime:ikanime@postgres:5432/ikanimelist
+    command: corepack pnpm db:migrate
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  app:
+    build:
+      context: .
+      target: runner
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://ikanime:ikanime@postgres:5432/ikanimelist
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?BETTER_AUTH_SECRET is required; run run-website.cmd}
+      BETTER_AUTH_URL: http://localhost:3000
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+      EMAIL_FROM: ${EMAIL_FROM:-no-reply@example.com}
+      EMAIL_DELIVERY_MODE: console
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 15s
+
+volumes:
+  ikanimelist_postgres:

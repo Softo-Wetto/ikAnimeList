@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+:root {
+  --background: #fafafa;
+  --foreground: #18181b;
+  --muted: #52525b;
+  --line: rgba(24, 24, 27, 0.12);
+}
+
+.dark {
+  --background: #09090b;
+  --foreground: #f4f4f5;
+  --muted: #a1a1aa;
+  --line: rgba(255, 255, 255, 0.08);
+}
+
+* { box-sizing: border-box; }
+
+html { color-scheme: light; scroll-behavior: smooth; }
+html.dark { color-scheme: dark; }
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at 30% -10%, rgba(124, 58, 237, 0.14), transparent 35rem),
+    var(--background);
+  color: var(--foreground);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  text-rendering: optimizeLegibility;
+}
+
+/* The original visual language is dark-first. These overrides preserve its contrast in light mode. */
+.light [class*="bg-zinc-950"] { background-color: rgba(250, 250, 250, 0.94) !important; }
+.light [class*="bg-zinc-900"] { background-color: rgba(244, 244, 245, 0.92) !important; }
+.light [class*="bg-white/"] { background-color: rgba(255, 255, 255, 0.72) !important; }
+.light [class*="text-white"] { color: #18181b !important; }
+.light [class*="text-zinc-100"], .light [class*="text-zinc-200"], .light [class*="text-zinc-300"] { color: #27272a !important; }
+.light [class*="text-zinc-400"], .light [class*="text-zinc-500"], .light [class*="text-zinc-600"] { color: #52525b !important; }
+.light [class*="border-white"] { border-color: rgba(24, 24, 27, 0.12) !important; }
+.light [class*="from-zinc-950"] { --tw-gradient-from: rgba(250, 250, 250, 0.72) !important; }
+.light [class*="via-zinc-950"] { --tw-gradient-via: rgba(250, 250, 250, 0.9) !important; }
+.light [class*="to-zinc-950"] { --tw-gradient-to: #fafafa !important; }
+
+::selection { background: rgba(167, 139, 250, 0.35); color: inherit; }
+
+a { color: inherit; text-decoration: none; }
+button, input, textarea, select { font: inherit; }
+
+.ambient {
+  pointer-events: none;
+  position: fixed;
+  z-index: -1;
+  width: 28rem;
+  height: 28rem;
+  border-radius: 999px;
+  filter: blur(110px);
+  opacity: 0.12;
+}
+
+.ambient-one { left: -15rem; top: 18rem; background: #8b5cf6; }
+.ambient-two { right: -18rem; top: 42rem; background: #ec4899; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

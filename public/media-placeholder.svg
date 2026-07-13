@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 900" role="img" aria-label="Media cover unavailable">
+  <defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#27272a"/><stop offset="1" stop-color="#18181b"/></linearGradient></defs>
+  <rect width="600" height="900" rx="28" fill="url(#g)"/>
+  <path d="M214 319h172v218H214z" fill="none" stroke="#71717a" stroke-width="18" stroke-linejoin="round"/>
+  <path d="M257 280h86v39h-86zM246 391h108M246 439h108M246 487h72" fill="none" stroke="#71717a" stroke-width="18" stroke-linecap="round"/>
+  <text x="300" y="620" text-anchor="middle" fill="#a1a1aa" font-family="system-ui,sans-serif" font-size="30">Cover unavailable</text>
+</svg>

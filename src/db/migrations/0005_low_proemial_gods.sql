@@ -1,0 +1,2 @@
+ALTER TABLE "profile" ADD COLUMN "activity_visibility" text DEFAULT 'public' NOT NULL;--> statement-breakpoint
+ALTER TABLE "profile" ADD CONSTRAINT "profile_activity_visibility_valid" CHECK ("profile"."activity_visibility" IN ('public', 'followers', 'private'));
