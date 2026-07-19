@@ -15,4 +15,10 @@ describe("SearchFilters", () => {
     expect(screen.getByRole("combobox", { name: /sort by/i })).toHaveValue("score");
     expect(screen.getByRole("button", { name: /show results/i })).toBeEnabled();
   });
+
+  it("gives the results action a prominent responsive treatment", () => {
+    render(<SearchFilters />);
+
+    expect(screen.getByRole("button", { name: /show results/i })).toHaveClass("w-full", "sm:w-auto", "bg-gradient-to-r");
+  });
 });

@@ -1,4 +1,4 @@
-import { Search, SlidersHorizontal } from "lucide-react";
+import { ArrowRight, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { genreOptions, statusOptions } from "@/features/catalog/filters";
@@ -13,7 +13,7 @@ export function SearchFilters({ mediaType = "anime", query = "", sort = "popular
       <label><span className="sr-only">Genre</span><select className={selectClass} defaultValue={genre} name="genre"><option value="">All genres</option>{genreOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></label>
       <label><span className="sr-only">Status</span><select className={selectClass} defaultValue={status} name="status"><option value="">Any status</option>{statusOptions(mediaType).map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></label>
       <label><span className="sr-only">Sort by</span><select className={selectClass} defaultValue={sort} name="sort"><option value="popularity">Most popular</option><option value="score">Highest rated</option><option value="newest">Newest first</option></select></label>
-      <Button type="submit"><SlidersHorizontal aria-hidden="true" size={16} /> Show results</Button>
+      <Button className="w-full border border-violet-200/20 bg-gradient-to-r from-violet-500 via-fuchsia-500 to-rose-500 px-5 text-white shadow-[0_12px_32px_-14px_rgba(217,70,239,.95)] hover:from-violet-400 hover:via-fuchsia-400 hover:to-rose-400 focus-visible:ring-fuchsia-300 sm:w-auto" type="submit"><span>Show results</span><ArrowRight aria-hidden="true" size={17} /></Button>
     </form>
   );
 }

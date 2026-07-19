@@ -1,0 +1,14 @@
+.hero {
+  --hero-overlay: radial-gradient(circle at 80% 15%, rgba(139, 92, 246, 0.28), transparent 35%), linear-gradient(135deg, rgba(9, 9, 11, 0.68), rgba(9, 9, 11, 0.93) 50%, rgba(9, 9, 11, 1));
+  --hero-surface: rgba(0, 0, 0, 0.2);
+  --hero-border: rgba(255, 255, 255, 0.1);
+}
+
+:global(html.light) .hero {
+  --hero-overlay: radial-gradient(circle at 80% 15%, rgba(139, 92, 246, 0.18), transparent 38%), linear-gradient(135deg, rgba(255, 255, 255, 0.82), rgba(248, 247, 255, 0.94) 52%, rgba(246, 246, 249, 0.99));
+  --hero-surface: rgba(255, 255, 255, 0.72);
+  --hero-border: rgba(63, 63, 71, 0.14);
+}
+
+.overlay { background: var(--hero-overlay); }
+.surface { background: var(--hero-surface); border-color: var(--hero-border); }

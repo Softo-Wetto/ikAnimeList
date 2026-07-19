@@ -22,7 +22,11 @@ export function statusOptions(mediaType: MediaType) {
 }
 
 export function validGenre(value: string) {
-  return genreOptions.some((option) => option.value === value) ? Number(value) : undefined;
+  // Genres, themes and demographics all share MAL's genre-id namespace, which Jikan's `genres`
+  // param accepts. Allow any plausible id (not just the dropdown subset) so detail-page tags,
+  // themes and demographics can link straight into a filtered browse.
+  const id = Number(value);
+  return Number.isInteger(id) && id > 0 && id < 100_000 ? id : undefined;
 }
 
 export function validStatus(mediaType: MediaType, value: string) {

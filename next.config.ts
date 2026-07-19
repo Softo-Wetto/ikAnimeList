@@ -14,7 +14,11 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "cdn.myanimelist.net" },
-      { protocol: "https", hostname: "images.myanimelist.net" }
+      { protocol: "https", hostname: "images.myanimelist.net" },
+      { protocol: "https", hostname: "media.kitsu.app" },
+      { protocol: "https", hostname: "media.kitsu.io" },
+      { protocol: "https", hostname: "img.youtube.com" },
+      { protocol: "https", hostname: "i.ytimg.com" }
     ]
   },
   poweredByHeader: false,

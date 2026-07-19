@@ -1,64 +1,187 @@
 @import "tailwindcss";
 
-:root {
-  --background: #fafafa;
-  --foreground: #18181b;
-  --muted: #52525b;
-  --line: rgba(24, 24, 27, 0.12);
+/*
+  Theming model
+  -------------
+  The visual language is dark-first, so dark mode uses Tailwind's default colour
+  scale untouched. Light mode is a first-class theme built by overriding the
+  neutral scale *variables* (no !important hacks): the same utility classes
+  (`bg-zinc-950`, `text-white`, `border-white/8`, …) resolve to light-appropriate
+  colours because Tailwind v4 emits `var(--color-*)`.
+
+  `black` is intentionally never remapped: `bg-black/*` overlays sit on top of
+  cover art in both themes, so on-image text uses `text-oncover` which never flips.
+*/
+
+@theme {
+  --color-oncover: #f4f4f5;
+  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  --animate-fade-up: fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-fade-in: fade-in 0.5s ease both;
+  --animate-pop: pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
-.dark {
-  --background: #09090b;
+:root {
+  /* Dark (default) */
+  --background: #08080b;
   --foreground: #f4f4f5;
-  --muted: #a1a1aa;
-  --line: rgba(255, 255, 255, 0.08);
+  --glow-a: rgba(139, 92, 246, 0.16);
+  --glow-b: rgba(236, 72, 153, 0.13);
+  --ambient-one: #8b5cf6;
+  --ambient-two: #ec4899;
+  --ambient-opacity: 0.14;
+  --ring-track: rgba(255, 255, 255, 0.09);
+}
+
+html.light {
+  --background: #f6f6f9;
+  --foreground: #1a1a1f;
+  --glow-a: rgba(139, 92, 246, 0.1);
+  --glow-b: rgba(236, 72, 153, 0.08);
+  --ambient-one: #a78bfa;
+  --ambient-two: #f0abfc;
+  --ambient-opacity: 0.5;
+  --ring-track: rgba(24, 24, 27, 0.12);
+
+  /* Neutral surfaces (were the darkest) become the lightest */
+  --color-zinc-950: #ffffff;
+  --color-zinc-900: #f1f1f5;
+  --color-zinc-800: #e6e6ec;
+  --color-zinc-700: #d6d6de;
+
+  /* Bright text (and white/x overlays) flip to near-black */
+  --color-white: #17171c;
+  --color-zinc-100: #1c1c22;
+  --color-zinc-200: #2a2a31;
+  --color-zinc-300: #3f3f47;
+
+  /* Muted text stays legible on light backgrounds */
+  --color-zinc-400: #56565f;
+  --color-zinc-500: #6c6c77;
+  --color-zinc-600: #8a8a95;
+
+  /* Accents: pastel violets/roses used as text/gradients need more punch on white */
+  --color-violet-200: #6d28d9;
+  --color-violet-300: #7c3aed;
+  --color-violet-400: #6d28d9;
+  --color-fuchsia-300: #d022b8;
+  --color-rose-300: #e11d6b;
+  --color-emerald-200: #047857;
+  --color-sky-100: #0369a1;
+  /* amber is intentionally NOT remapped: it labels scores on always-dark cover overlays. */
 }
 
 * { box-sizing: border-box; }
 
-html { color-scheme: light; scroll-behavior: smooth; }
-html.dark { color-scheme: dark; }
+html { color-scheme: dark; scroll-behavior: smooth; }
+html.light { color-scheme: light; }
 
 body {
   margin: 0;
+  min-height: 100dvh;
   background:
-    radial-gradient(circle at 30% -10%, rgba(124, 58, 237, 0.14), transparent 35rem),
+    radial-gradient(circle at 15% -10%, var(--glow-a), transparent 38rem),
+    radial-gradient(circle at 92% 8%, var(--glow-b), transparent 34rem),
     var(--background);
   color: var(--foreground);
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: var(--font-sans);
   text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* The original visual language is dark-first. These overrides preserve its contrast in light mode. */
-.light [class*="bg-zinc-950"] { background-color: rgba(250, 250, 250, 0.94) !important; }
-.light [class*="bg-zinc-900"] { background-color: rgba(244, 244, 245, 0.92) !important; }
-.light [class*="bg-white/"] { background-color: rgba(255, 255, 255, 0.72) !important; }
-.light [class*="text-white"] { color: #18181b !important; }
-.light [class*="text-zinc-100"], .light [class*="text-zinc-200"], .light [class*="text-zinc-300"] { color: #27272a !important; }
-.light [class*="text-zinc-400"], .light [class*="text-zinc-500"], .light [class*="text-zinc-600"] { color: #52525b !important; }
-.light [class*="border-white"] { border-color: rgba(24, 24, 27, 0.12) !important; }
-.light [class*="from-zinc-950"] { --tw-gradient-from: rgba(250, 250, 250, 0.72) !important; }
-.light [class*="via-zinc-950"] { --tw-gradient-via: rgba(250, 250, 250, 0.9) !important; }
-.light [class*="to-zinc-950"] { --tw-gradient-to: #fafafa !important; }
-
-::selection { background: rgba(167, 139, 250, 0.35); color: inherit; }
+::selection { background: color-mix(in oklab, var(--color-violet-400) 40%, transparent); color: inherit; }
 
 a { color: inherit; text-decoration: none; }
 button, input, textarea, select { font: inherit; }
 
+/* Ambient background glows */
 .ambient {
   pointer-events: none;
   position: fixed;
   z-index: -1;
-  width: 28rem;
-  height: 28rem;
+  width: 30rem;
+  height: 30rem;
   border-radius: 999px;
-  filter: blur(110px);
-  opacity: 0.12;
+  filter: blur(120px);
+  opacity: var(--ambient-opacity);
+  transition: opacity 0.4s ease;
+}
+.ambient-one { left: -14rem; top: 12rem; background: var(--ambient-one); }
+.ambient-two { right: -16rem; top: 40rem; background: var(--ambient-two); }
+
+/* ---- Motion system ---------------------------------------------------- */
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes pop {
+  from { opacity: 0; transform: scale(0.94); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes shimmer {
+  100% { transform: translateX(100%); }
+}
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
 }
 
-.ambient-one { left: -15rem; top: 18rem; background: #8b5cf6; }
-.ambient-two { right: -18rem; top: 42rem; background: #ec4899; }
+/*
+  Scroll-reveal for below-the-fold sections. Reveals once and stays revealed.
+  Content is visible by default; the ScrollReveal client component "arms" each
+  section on mount (adding .reveal-armed) and reveals it on intersection, so
+  without JavaScript everything is simply shown.
+*/
+@media (prefers-reduced-motion: no-preference) {
+  .reveal-armed {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+  }
+  .reveal-armed.reveal-in {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* One-shot entrance for above-the-fold content */
+@media (prefers-reduced-motion: no-preference) {
+  .enter { animation: var(--animate-fade-up); }
+  .enter-in { animation: var(--animate-fade-in); }
+  .enter-pop { animation: var(--animate-pop); }
+  .enter-delay-1 { animation-delay: 0.06s; }
+  .enter-delay-2 { animation-delay: 0.12s; }
+  .enter-delay-3 { animation-delay: 0.18s; }
+  .float-slow { animation: float-y 6s ease-in-out infinite; }
+}
+
+/* Loading skeleton shimmer */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: color-mix(in oklab, var(--color-white) 6%, transparent);
+}
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--color-white) 9%, transparent), transparent);
+  animation: shimmer 1.6s infinite;
+}
+
+/* Smooth cross-document/route feel */
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) { animation-duration: 0.25s; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

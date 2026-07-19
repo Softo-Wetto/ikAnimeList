@@ -1,6 +1,6 @@
 # ikAnimeList
 
-A production-ready anime and manga discovery, tracking, and community application powered by Next.js, PostgreSQL, Better Auth, Drizzle, and Jikan.
+A production-ready anime and manga discovery, tracking, and community application powered by Next.js, PostgreSQL, Better Auth, Drizzle, Jikan, and a Kitsu fallback catalogue.
 
 ## What it includes
 
@@ -14,7 +14,7 @@ A production-ready anime and manga discovery, tracking, and community applicatio
 
 ## Run with one command
 
-Requirements: Docker Desktop and internet access for Jikan catalogue data.
+Requirements: Docker Desktop and internet access for catalogue providers.
 
 Double-click `run-website.cmd`, or run:
 
@@ -64,4 +64,4 @@ Install Playwright's browser once with `corepack pnpm exec playwright install ch
 
 Copy `.env.example`; never commit real values. Production requires PostgreSQL, a unique Better Auth secret, canonical HTTPS URLs, Resend delivery, and a verified sender. `EMAIL_DELIVERY_MODE=console` is local-only. `PLAYWRIGHT_TEST_MODE` is reserved for the isolated browser test server and must never be enabled in production.
 
-See [Deployment](docs/DEPLOYMENT.md) and [Architecture](docs/ARCHITECTURE.md). Catalogue data is supplied by Jikan; an upstream outage does not affect persisted accounts, libraries, or community data.
+See [Deployment](docs/DEPLOYMENT.md) and [Architecture](docs/ARCHITECTURE.md). Jikan is the primary catalogue provider; when its list or detail endpoints are unavailable, the server uses Kitsu data mapped back to MyAnimeList IDs. An upstream outage does not affect persisted accounts, libraries, or community data.
