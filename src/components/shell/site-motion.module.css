@@ -1,0 +1,6 @@
+.motion { display: contents; }
+@keyframes driftOne { 0%, 100% { transform: translate3d(0, 0, 0) scale(1); } 50% { transform: translate3d(7rem, -3rem, 0) scale(1.14); } }
+@keyframes driftTwo { 0%, 100% { transform: translate3d(0, 0, 0) scale(1.05); } 50% { transform: translate3d(-6rem, 4rem, 0) scale(.92); } }
+@keyframes driftThree { 0%, 100% { transform: translate3d(0, 0, 0) scale(.94); } 50% { transform: translate3d(2rem, -6rem, 0) scale(1.16); } }
+@keyframes carouselGlow { 0%, 100% { box-shadow: 0 24px 64px -36px rgba(139, 92, 246, .7); } 50% { box-shadow: 0 32px 84px -34px rgba(217, 70, 239, .55); } }
+@media (prefers-reduced-motion: no-preference) { :global(.ambient-one) { animation: driftOne 18s ease-in-out infinite; } :global(.ambient-two) { animation: driftTwo 22s ease-in-out infinite; } :global(.ambient-three) { animation: driftThree 16s ease-in-out infinite; } :global(.hero-carousel > div:first-child) { animation: carouselGlow 5s ease-in-out infinite; } }

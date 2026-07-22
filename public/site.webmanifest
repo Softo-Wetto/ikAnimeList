@@ -1,0 +1,12 @@
+{
+  "name": "ikAnimeList",
+  "short_name": "ikAnimeList",
+  "description": "Discover anime and manga, track every chapter and episode, and share what you love.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#08080b",
+  "theme_color": "#08080b",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

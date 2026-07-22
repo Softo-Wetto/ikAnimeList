@@ -1,0 +1,17 @@
+"use client";
+
+import { ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import type { MediaSummary } from "@/features/catalog/model";
+
+export function HomeHeroCarousel({ items }: { items: MediaSummary[] }) {
+  const slides = items.slice(0, 5); const [active, setActive] = useState(0); const [paused, setPaused] = useState(false); const [reduced, setReduced] = useState(false);
+  useEffect(() => { if (!window.matchMedia) return; const query = window.matchMedia("(prefers-reduced-motion: reduce)"); const sync = () => setReduced(query.matches); sync(); query.addEventListener("change", sync); return () => query.removeEventListener("change", sync); }, []);
+  useEffect(() => { if (reduced || paused || slides.length < 2) return; const timer = window.setInterval(() => setActive((current) => (current + 1) % slides.length), 6000); return () => window.clearInterval(timer); }, [paused, reduced, slides.length]);
+  if (!slides.length) return null;
+  const previous = () => setActive((current) => (current - 1 + slides.length) % slides.length); const next = () => setActive((current) => (current + 1) % slides.length);
+  return <section aria-label="Spotlight carousel" className="hero-carousel relative mx-auto hidden w-80 lg:block" onFocusCapture={() => setPaused(true)} onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}><div className="relative aspect-[2/3] overflow-hidden rounded-[2.4rem] border border-white/10 bg-zinc-900 shadow-2xl shadow-violet-950/50">{slides.map((item, index) => <article aria-hidden={index !== active} className={`absolute inset-0 transition-[opacity,transform] duration-700 ease-out ${index === active ? "translate-x-0 opacity-100" : "translate-x-6 opacity-0"}`} key={`${item.mediaType}-${item.id}`}><Image alt={`${item.title} cover`} className="object-cover" fill priority={index === 0} sizes="320px" src={item.imageUrl || "/media-placeholder.svg"} /><div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/15 to-transparent" /><div className="absolute inset-x-5 bottom-5"><span className="inline-flex items-center gap-1.5 rounded-full border border-oncover/20 bg-black/45 px-2.5 py-1 text-xs font-semibold text-oncover backdrop-blur"><Sparkles aria-hidden="true" size={12} /> Spotlight</span><h2 className="mt-3 text-xl font-black text-oncover">{item.title}</h2><Link className="mt-3 inline-flex text-sm font-semibold text-violet-200 transition hover:text-white" href={`/${item.mediaType}/${item.id}`}>View details</Link></div></article>)}</div>{slides.length > 1 ? <><div className="absolute inset-x-3 top-1/2 flex -translate-y-1/2 justify-between"><Button aria-label="Previous spotlight" onClick={previous} size="icon" variant="secondary"><ChevronLeft aria-hidden="true" size={17} /></Button><Button aria-label="Next spotlight" onClick={next} size="icon" variant="secondary"><ChevronRight aria-hidden="true" size={17} /></Button></div><div className="mt-4 flex justify-center gap-2">{slides.map((item, index) => <button aria-label={`Show ${item.title}`} className={`h-1.5 rounded-full transition-all duration-300 ${index === active ? "w-7 bg-violet-300" : "w-1.5 bg-white/25 hover:bg-white/60"}`} key={item.id} onClick={() => setActive(index)} type="button" />)}</div></> : null}</section>;
+}

@@ -4,43 +4,11 @@ import { LoaderCircle, Save } from "lucide-react";
 import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { SelectMenu } from "@/components/ui/select-menu";
 import type { ProfileSettingsInput } from "@/features/social/profile-settings";
 import { updateProfileSettings } from "@/features/social/server/profile-actions";
 
 export function ProfileSettingsForm({ initialValues }: { initialValues: ProfileSettingsInput }) {
-  const [pending, startTransition] = useTransition();
-  const [message, setMessage] = useState<string>();
-  const selectClass = "h-11 rounded-2xl border border-white/10 bg-zinc-950/70 px-4 text-sm text-zinc-200 outline-none focus:border-violet-400";
-
-  return (
-    <form className="grid gap-6" onSubmit={(event) => {
-      event.preventDefault();
-      const data = new FormData(event.currentTarget);
-      startTransition(async () => {
-        const result = await updateProfileSettings({
-          name: String(data.get("name") ?? ""),
-          bio: String(data.get("bio") ?? ""),
-          location: String(data.get("location") ?? ""),
-          website: String(data.get("website") ?? ""),
-          visibility: String(data.get("visibility") ?? "public"),
-          activityVisibility: String(data.get("activityVisibility") ?? "public")
-        });
-        setMessage(result.message);
-      });
-    }}>
-      <div className="grid gap-5 sm:grid-cols-2">
-        <label className="grid gap-2 text-sm font-semibold">Display name<Input defaultValue={initialValues.name} maxLength={80} name="name" required /></label>
-        <label className="grid gap-2 text-sm font-semibold">Location<Input defaultValue={initialValues.location} maxLength={100} name="location" placeholder="Optional" /></label>
-      </div>
-      <label className="grid gap-2 text-sm font-semibold">Bio<textarea className="min-h-32 rounded-2xl border border-white/10 bg-zinc-950/70 p-4 text-sm outline-none focus:border-violet-400" defaultValue={initialValues.bio} maxLength={500} name="bio" /></label>
-      <label className="grid gap-2 text-sm font-semibold">Website<Input defaultValue={initialValues.website} name="website" placeholder="https://example.com" type="url" /></label>
-      <div className="grid gap-5 sm:grid-cols-2">
-        <label className="grid gap-2 text-sm font-semibold">Profile visibility<select className={selectClass} defaultValue={initialValues.visibility} name="visibility"><option value="public">Public</option><option value="private">Private</option></select></label>
-        <label className="grid gap-2 text-sm font-semibold">Activity audience<select className={selectClass} defaultValue={initialValues.activityVisibility} name="activityVisibility"><option value="public">Everyone</option><option value="followers">People who follow me</option><option value="private">Only me</option></select></label>
-      </div>
-      <p className="text-xs leading-5 text-zinc-500">Private profile content is visible only to you. Your activity audience applies to new list, review, and follow events.</p>
-      {message ? <p aria-live="polite" className="text-sm text-violet-300">{message}</p> : null}
-      <Button className="w-fit" disabled={pending} type="submit">{pending ? <LoaderCircle className="animate-spin" size={16} /> : <Save size={16} />} Save settings</Button>
-    </form>
-  );
+  const [pending, startTransition] = useTransition(); const [message, setMessage] = useState<string>();
+  return <form className="grid gap-6" onSubmit={(event) => { event.preventDefault(); const data = new FormData(event.currentTarget); startTransition(async () => { const result = await updateProfileSettings({ name: String(data.get("name") ?? ""), bio: String(data.get("bio") ?? ""), location: String(data.get("location") ?? ""), website: String(data.get("website") ?? ""), visibility: String(data.get("visibility") ?? "public"), activityVisibility: String(data.get("activityVisibility") ?? "public") }); setMessage(result.message); }); }}><div className="grid gap-5 sm:grid-cols-2"><label className="grid gap-2 text-sm font-semibold">Display name<Input defaultValue={initialValues.name} maxLength={80} name="name" required /></label><label className="grid gap-2 text-sm font-semibold">Location<Input defaultValue={initialValues.location} maxLength={100} name="location" placeholder="Optional" /></label></div><label className="grid gap-2 text-sm font-semibold">Bio<textarea className="min-h-32 rounded-2xl border border-white/10 bg-zinc-950/70 p-4 text-sm outline-none focus:border-violet-400" defaultValue={initialValues.bio} maxLength={500} name="bio" /></label><label className="grid gap-2 text-sm font-semibold">Website<Input defaultValue={initialValues.website} name="website" placeholder="https://example.com" type="url" /></label><div className="grid gap-5 sm:grid-cols-2"><label className="grid gap-2 text-sm font-semibold">Profile visibility<SelectMenu ariaLabel="Profile visibility" defaultValue={initialValues.visibility} name="visibility" options={[{ value: "public", label: "Public" }, { value: "private", label: "Private" }]} /></label><label className="grid gap-2 text-sm font-semibold">Activity audience<SelectMenu ariaLabel="Activity audience" defaultValue={initialValues.activityVisibility} name="activityVisibility" options={[{ value: "public", label: "Everyone" }, { value: "followers", label: "People who follow me" }, { value: "private", label: "Only me" }]} /></label></div><p className="text-xs leading-5 text-zinc-500">Private profile content is visible only to you. Your activity audience applies to new list, review, and follow events.</p>{message ? <p aria-live="polite" className="text-sm text-violet-300">{message}</p> : null}<Button className="w-fit" disabled={pending} type="submit">{pending ? <LoaderCircle className="animate-spin" size={16} /> : <Save size={16} />} Save settings</Button></form>;
 }
